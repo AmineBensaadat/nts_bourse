@@ -45,6 +45,7 @@ dependencies:
 
   #used to validate email used in login screen
   #email_validator: ^1.0.0
+  flutter_slidable: ^3.0.0
 
   http: ^0.13.5
   intl: ^0.18.1
@@ -53,7 +54,6 @@ dependencies:
   ini: ^2.1.0
   path_provider: ^2.0.14
   syncfusion_flutter_gauges: ^21.1.35
-  flutter_slidable: ^0.6.0
   xml:
   
   #used in tab bar shared wedget
