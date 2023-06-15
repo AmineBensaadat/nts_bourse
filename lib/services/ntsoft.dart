@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:archive/archive_io.dart';
+import 'package:intl/intl.dart';
 
 //import 'package:ini/ini.dart';
 import 'package:path_provider/path_provider.dart';
@@ -351,4 +352,8 @@ Future<void> awesomeDialogMsg(BuildContext context, String aMsg) async {
     btnOkIcon: Icons.info_rounded,
     btnOkColor: Colors.green,
   ).show();
+}
+
+String ntsDoubleToStr(double n) {
+  return NumberFormat('#,##0.00').format(n).replaceAll(',', ' ');
 }

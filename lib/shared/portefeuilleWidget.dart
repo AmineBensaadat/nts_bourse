@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-//import 'package:syncfusion_flutter_gauges/gauges.dart';
+
+import '../services/ntsoft.dart';
 
 class PortefeuilleWidget extends StatefulWidget {
   const PortefeuilleWidget({
@@ -99,7 +100,7 @@ class _PortefeuilleWidgetState extends State<PortefeuilleWidget> {
                           Text('Numéro',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 15)),
-                          Text('275544',
+                          Text('1256986',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20)),
                         ],
@@ -140,14 +141,20 @@ class _PortefeuilleWidgetState extends State<PortefeuilleWidget> {
                 child: Column(children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Solde Comptable'), Text('121 600.00')],
+                    children: [
+                      Text('Solde Comptable'),
+                      Text(ntsDoubleToStr(1256986.00))
+                    ],
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Opération en cours'), Text('12 600.00')],
+                    children: [
+                      Text('Opération en cours'),
+                      Text(ntsDoubleToStr(1256986.00))
+                    ],
                   ),
                   SizedBox(
                     height: 20,
@@ -161,7 +168,7 @@ class _PortefeuilleWidgetState extends State<PortefeuilleWidget> {
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        '1256 986.00',
+                        ntsDoubleToStr(1256986.00),
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       )

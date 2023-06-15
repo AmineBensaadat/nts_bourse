@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 import '../model/fav.dart';
+import '../services/ntsoft.dart';
 
 class FavoritWidgetDatatable extends StatefulWidget {
   const FavoritWidgetDatatable({
@@ -146,7 +147,7 @@ class _FavoritWidgetDatatableState extends State<FavoritWidgetDatatable> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
-            columnSpacing: 30,
+            columnSpacing: 35,
             sortAscending: isAscending,
             sortColumnIndex: sortColumnIndex,
             columns: getColumns(columns),
@@ -158,6 +159,7 @@ class _FavoritWidgetDatatableState extends State<FavoritWidgetDatatable> {
   Widget getVariation(variation, Fav, pr) {
     if (variation > 0) {
       return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
               decoration: BoxDecoration(
@@ -166,12 +168,13 @@ class _FavoritWidgetDatatableState extends State<FavoritWidgetDatatable> {
               ),
               margin: EdgeInsets.fromLTRB(0, 9, 0, 9),
               height: double.infinity,
-              width: 80, //
+              width: 60, //
               child: Center(
                   child: Text(variation.toStringAsFixed(2) + ' %',
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold)))),
           IconButton(
+            alignment: Alignment.centerLeft,
             icon: const Icon(Icons.star),
             color: Colors.amber,
             onPressed: () {
@@ -194,7 +197,7 @@ class _FavoritWidgetDatatableState extends State<FavoritWidgetDatatable> {
               ),
               margin: EdgeInsets.fromLTRB(0, 9, 0, 9),
               height: double.infinity,
-              width: 80, //
+              width: 60, //
               child: Center(
                   child: Text(variation.toStringAsFixed(2) + ' %',
                       style: TextStyle(
@@ -222,7 +225,7 @@ class _FavoritWidgetDatatableState extends State<FavoritWidgetDatatable> {
               ),
               margin: EdgeInsets.fromLTRB(0, 9, 0, 9),
               height: double.infinity,
-              width: 80, //
+              width: 60, //
               child: Center(
                   child: Text(variation.toStringAsFixed(2) + ' %',
                       style: TextStyle(
@@ -307,43 +310,33 @@ Widget getLastPrice(variation, lastPrice) {
     return Container(
       width: 70,
       margin: EdgeInsets.only(top: 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            lastPrice.toStringAsFixed(2),
-            style: TextStyle(
-                color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ],
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Text(
+          lastPrice.toStringAsFixed(2),
+          style: TextStyle(
+              color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   } else if (variation < 0) {
     return Container(
       width: 70,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(lastPrice.toStringAsFixed(2),
-              style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold)),
-        ],
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Text(lastPrice.toStringAsFixed(2),
+            style: TextStyle(
+                color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold)),
       ),
     );
   } else {
     return Container(
       width: 70,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(lastPrice.toStringAsFixed(2),
-              style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold)),
-        ],
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Text(ntsDoubleToStr(lastPrice),
+            style: TextStyle(
+                color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold)),
       ),
     );
   }

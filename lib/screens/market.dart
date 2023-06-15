@@ -18,50 +18,49 @@ class _MarketState extends State<Market> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(10, 20, 10, 0),
+      width: double.infinity,
+      margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
       child: DefaultTabController(
         length: 3,
         child: Column(
-          children: <Widget>[
+          children: [
             Container(
               height: 40,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.white,
               ),
-              width: double.infinity,
-              child: Center(
-                child: ButtonsTabBar(
-                  radius: 15,
-                  contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  backgroundColor: Color(0xFF140C24),
-                  unselectedBackgroundColor: Colors.grey[300],
-                  unselectedLabelStyle: TextStyle(color: Colors.black),
-                  labelStyle: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                  tabs: [
-                    Tab(
-                      text: "Favouris",
-                      icon: Icon(
-                        Icons.star_outlined,
-                        color: Colors.amber,
-                      ),
+              child: ButtonsTabBar(
+                center: false,
+                radius: 15,
+                contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                backgroundColor: Color(0xFF140C24),
+                unselectedBackgroundColor: Colors.grey[300],
+                unselectedLabelStyle: TextStyle(color: Colors.black),
+                labelStyle:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                tabs: [
+                  Tab(
+                    text: "Favouris",
+                    icon: Icon(
+                      Icons.star_outlined,
+                      color: Colors.amber,
                     ),
-                    Tab(
-                      icon: ImageIcon(
-                        AssetImage(
-                            'assets/images/icons/icons8-chandeliers-96.png'),
-                      ),
-                      text: "Marché",
+                  ),
+                  Tab(
+                    icon: ImageIcon(
+                      AssetImage(
+                          'assets/images/icons/icons8-chandeliers-96.png'),
                     ),
-                    Tab(
-                      icon: ImageIcon(
-                        AssetImage('assets/images/icons/actions24.png'),
-                      ),
-                      text: "OPCVM",
+                    text: "Marché",
+                  ),
+                  Tab(
+                    icon: ImageIcon(
+                      AssetImage('assets/images/icons/actions24.png'),
                     ),
-                  ],
-                ),
+                    text: "OPCVM",
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 10),

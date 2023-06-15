@@ -146,7 +146,7 @@ class MarketWidgetState extends State<MarketWidget> {
               ),
               margin: EdgeInsets.fromLTRB(0, 9, 0, 9),
               height: double.infinity,
-              width: 80, //
+              width: 60, //
               child: Center(
                   child: Text(variation.toStringAsFixed(2) + ' %',
                       style: TextStyle(
@@ -172,7 +172,7 @@ class MarketWidgetState extends State<MarketWidget> {
               ),
               margin: EdgeInsets.fromLTRB(0, 9, 0, 9),
               height: double.infinity,
-              width: 80, //
+              width: 60, //
               child: Center(
                   child: Text(variation.toStringAsFixed(2) + ' %',
                       style: TextStyle(
@@ -200,7 +200,7 @@ class MarketWidgetState extends State<MarketWidget> {
               ),
               margin: EdgeInsets.fromLTRB(0, 9, 0, 9),
               height: double.infinity,
-              width: 80, //
+              width: 60, //
               child: Center(
                   child: Text(variation.toString() + ' %',
                       style: TextStyle(
@@ -354,7 +354,7 @@ class MarketWidgetState extends State<MarketWidget> {
 Widget getLastPrice(variation, lastPrice) {
   if (variation > 0) {
     return Container(
-      width: 70,
+      width: 60,
       margin: EdgeInsets.only(top: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -362,35 +362,35 @@ Widget getLastPrice(variation, lastPrice) {
           Text(lastPrice.toStringAsFixed(2),
               style: TextStyle(
                   color: Colors.green,
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold)),
         ],
       ),
     );
   } else if (variation < 0) {
     return Container(
-      width: 70,
+      width: 60,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(lastPrice.toStringAsFixed(2),
               style: TextStyle(
                   color: Colors.red,
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold)),
         ],
       ),
     );
   } else {
     return Container(
-      width: 70,
+      width: 60,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(lastPrice.toStringAsFixed(2),
               style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold)),
         ],
       ),

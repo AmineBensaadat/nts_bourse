@@ -144,7 +144,7 @@ class OpcvmWidgetState extends State<OpcvmWidget> {
               ),
               margin: EdgeInsets.fromLTRB(0, 9, 0, 9),
               height: double.infinity,
-              width: 80, //
+              width: 60, //
               child: Center(
                   child: Text(variation.toStringAsFixed(2) + ' %',
                       style: TextStyle(
@@ -170,7 +170,7 @@ class OpcvmWidgetState extends State<OpcvmWidget> {
               ),
               margin: EdgeInsets.fromLTRB(0, 9, 0, 9),
               height: double.infinity,
-              width: 80, //
+              width: 60, //
               child: Center(
                   child: Text(variation.toStringAsFixed(2) + ' %',
                       style: TextStyle(
@@ -198,7 +198,7 @@ class OpcvmWidgetState extends State<OpcvmWidget> {
               ),
               margin: EdgeInsets.fromLTRB(0, 9, 0, 9),
               height: double.infinity,
-              width: 80, //
+              width: 60, //
               child: Center(
                   child: Text(variation.toStringAsFixed(2) + ' %',
                       style: TextStyle(
@@ -352,7 +352,7 @@ class OpcvmWidgetState extends State<OpcvmWidget> {
 Widget getLastPrice(variation, lastPrice) {
   if (variation > 0) {
     return Container(
-      width: 70,
+      width: 60,
       margin: EdgeInsets.only(top: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -360,24 +360,24 @@ Widget getLastPrice(variation, lastPrice) {
           Text(lastPrice.toStringAsFixed(2),
               style: TextStyle(
                   color: Colors.green,
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold)),
         ],
       ),
     );
   } else if (variation < 0) {
     return Container(
-      width: 70,
+      width: 60,
       child: Text(lastPrice.toStringAsFixed(2),
           style: TextStyle(
-              color: Colors.red, fontSize: 18, fontWeight: FontWeight.bold)),
+              color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold)),
     );
   } else {
     return Container(
-      width: 70,
+      width: 60,
       child: Text(lastPrice.toStringAsFixed(2),
           style: TextStyle(
-              color: Colors.grey, fontSize: 18, fontWeight: FontWeight.bold)),
+              color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold)),
     );
   }
 }

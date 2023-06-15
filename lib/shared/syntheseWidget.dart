@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import '../services/ntsoft.dart';
 
 class SyntheseWidget extends StatefulWidget {
   const SyntheseWidget({
@@ -96,7 +99,8 @@ class _SyntheseWidgetState extends State<SyntheseWidget> {
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        '1256 986.00',
+                        //NumberFormat('#,##0.00', "fr_FR").format(1256986.25),
+                        NumberFormat('#,###.00#', "en_US").format(1256986.25),
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       )
@@ -121,14 +125,20 @@ class _SyntheseWidgetState extends State<SyntheseWidget> {
                 child: Column(children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('+/- Latentes'), Text('2 800.00')],
+                    children: [
+                      Text('+/- Latentes'),
+                      Text(ntsDoubleToStr(1256986.00))
+                    ],
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('+/- Réalisées'), Text('12 800.00')],
+                    children: [
+                      Text('+/- Réalisées'),
+                      Text(ntsDoubleToStr(1256986.00))
+                    ],
                   ),
                   SizedBox(
                     height: 20,
@@ -142,7 +152,7 @@ class _SyntheseWidgetState extends State<SyntheseWidget> {
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        '122 800.00',
+                        ntsDoubleToStr(1256986.00),
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

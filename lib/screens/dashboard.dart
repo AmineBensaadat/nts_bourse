@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nts_bourse_app/screens/market.dart';
 import 'package:nts_bourse_app/screens/portefeuille.dart';
 import 'package:nts_bourse_app/shared/appbar.dart';
-
+import 'News.dart';
 import 'orders.dart';
 
 class Dashboard extends StatefulWidget {
@@ -23,7 +23,7 @@ class _DashboardState extends State<Dashboard> {
     Portefeuille(),
     Orders(),
     Center(child: Text('4')),
-    Center(child: Text('5'))
+    News(),
   ];
 
   void _onItemTapped(int index) {
@@ -34,7 +34,7 @@ class _DashboardState extends State<Dashboard> {
         Portefeuille(),
         Orders(),
         Center(child: Text('4')),
-        Center(child: Text('5'))
+        News(),
       ];
     });
   }
@@ -76,7 +76,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFE5E7EA),
+      backgroundColor: Color.fromARGB(255, 250, 252, 255),
       appBar: AppbarWidget(),
       body: Container(
         child: tabs[_selectedIndex],
