@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
 import '../services/ntsoft.dart';
 
 class SyntheseWidget extends StatefulWidget {
@@ -71,21 +69,30 @@ class _SyntheseWidgetState extends State<SyntheseWidget> {
                 child: Column(children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Solde Comptable'), Text('121 600.00')],
+                    children: [
+                      Text('Solde Comptable'),
+                      Text(ntsDoubleToStr(121600.00))
+                    ],
                   ),
                   SizedBox(
                     height: 30,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Valorisation Action'), Text('12 600.00')],
+                    children: [
+                      Text('Valorisation Action'),
+                      Text(ntsDoubleToStr(12600.00))
+                    ],
                   ),
                   SizedBox(
                     height: 30,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Valorisation OPCVM'), Text('986 548.00')],
+                    children: [
+                      Text('Valorisation OPCVM'),
+                      Text(ntsDoubleToStr(986548.00))
+                    ],
                   ),
                   SizedBox(
                     height: 30,
@@ -99,8 +106,7 @@ class _SyntheseWidgetState extends State<SyntheseWidget> {
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        //NumberFormat('#,##0.00', "fr_FR").format(1256986.25),
-                        NumberFormat('#,###.00#', "en_US").format(1256986.25),
+                        ntsDoubleToStr(1256986.25),
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       )

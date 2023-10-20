@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../screens/subscriptionRachats.dart';
 import '../services/ntsoft.dart';
 
 class OPCVMOrdersWidget extends StatefulWidget {
@@ -136,7 +137,7 @@ class _OPCVMOrdersWidgetState extends State<OPCVMOrdersWidget> {
                       ),
                     ),
                     Container(
-                      width: 150,
+                      width: 125,
                       child: Text(
                         'Sens / Statut',
                         style: TextStyle(fontSize: 12),
@@ -164,7 +165,7 @@ class _OPCVMOrdersWidgetState extends State<OPCVMOrdersWidget> {
               itemCount: items.length,
               itemBuilder: (BuildContext context, int index) {
                 final item = items[index];
-                return getSlidableListOPCVM(item);
+                return getSlidableListOrderOPCVM(item);
               },
               separatorBuilder: (BuildContext context, int index) =>
                   const Divider(),
@@ -176,7 +177,7 @@ class _OPCVMOrdersWidgetState extends State<OPCVMOrdersWidget> {
   }
 }
 
-getSlidableListOPCVM(DataList item) {
+getSlidableListOrderOPCVM(DataList item) {
   return Slidable(
       // Specify a key if the Slidable is dismissible.
       key: const ValueKey(0),
@@ -190,11 +191,11 @@ getSlidableListOPCVM(DataList item) {
         //dismissible: DismissiblePane(onDismissed: () {}),
 
         // All actions are defined in the children parameter.
-        children: const [
+        children: [
           // A SlidableAction can have an icon and/or a label.
 
           SlidableAction(
-            onPressed: doNothing,
+            onPressed: (context) {},
             backgroundColor: Colors.amber,
             foregroundColor: Colors.white,
             icon: Icons.highlight_remove_sharp,
@@ -202,7 +203,12 @@ getSlidableListOPCVM(DataList item) {
           SlidableAction(
             // An action can be bigger than the others.
             flex: 1,
-            onPressed: doNothing,
+            onPressed: (context) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SubscriptionRachats()),
+              );
+            },
             backgroundColor: Color(0xFF140C24),
             foregroundColor: Colors.white,
             icon: Icons.create_outlined,
@@ -211,19 +217,24 @@ getSlidableListOPCVM(DataList item) {
       ),
 
       // The end action pane is the one at the right or the bottom side.
-      endActionPane: const ActionPane(
+      endActionPane: ActionPane(
         motion: ScrollMotion(),
         children: [
           SlidableAction(
             // An action can be bigger than the others.
             flex: 1,
-            onPressed: doNothing,
+            onPressed: (context) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SubscriptionRachats()),
+              );
+            },
             backgroundColor: Color(0xFF140C24),
             foregroundColor: Colors.white,
             icon: Icons.create_outlined,
           ),
           SlidableAction(
-            onPressed: doNothing,
+            onPressed: (context) {},
             backgroundColor: Colors.amber,
             foregroundColor: Colors.white,
             icon: Icons.highlight_remove_sharp,
@@ -256,7 +267,7 @@ getSlidableListOPCVM(DataList item) {
                 child: Column(
                   children: [
                     Container(
-                      width: 120,
+                      width: 100,
                       child: Align(
                         alignment: Alignment.center,
                         child: Text(
@@ -337,5 +348,3 @@ getStatusColors(String statut) {
   }
   return StatuColor;
 }
-
-void doNothing(BuildContext context) {}

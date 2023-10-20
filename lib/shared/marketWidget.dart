@@ -1,6 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
+
+import '../screens/stockScreen.dart';
+import '../services/ntsoft.dart';
 // ignore: import_of_legacy_library_into_null_safe
+
+class MatketObject {
+  final String favName;
+  final String vol;
+  final double variation;
+  final double lastPrice;
+  final bool is_Fav;
+
+  const MatketObject(
+      {required this.favName,
+      required this.vol,
+      required this.variation,
+      required this.lastPrice,
+      required this.is_Fav});
+}
 
 class MarketWidget extends StatefulWidget {
   const MarketWidget({super.key});
@@ -12,6 +30,7 @@ class MarketWidget extends StatefulWidget {
 class MarketWidgetState extends State<MarketWidget> {
   bool isAscending = false;
   int? sortColumnIndex;
+  late List<MatketObject> MarketData;
 
   List<dynamic> data = [
     {
@@ -282,25 +301,32 @@ class MarketWidgetState extends State<MarketWidget> {
               columns: getColumns(columns),
               rows: List.generate(filteredData.length, (index) {
                 final item = filteredData[index];
+
                 return DataRow(
                   cells: [
-                    DataCell(Container(
-                        margin: EdgeInsets.only(top: 5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item['Name'],
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Container(
-                                margin: EdgeInsets.only(top: 5),
-                                child: Text(item['vol'])),
-                          ],
-                        ))),
-                    DataCell(
-                        getLastPrice(item['variation'], item['lastPrice'])),
-                    DataCell(getVariation(item['variation'], index, pr)),
+                    DataCell(onTap: () {
+                      showFav(item['Name']);
+                    },
+                        Container(
+                            margin: EdgeInsets.only(top: 5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item['Name'],
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Container(
+                                    margin: EdgeInsets.only(top: 5),
+                                    child: Text(item['vol'])),
+                              ],
+                            ))),
+                    DataCell(onTap: () {
+                      showFav(item['Name']);
+                    }, getLastPrice(item['lastPrice'])),
+                    DataCell(onTap: () {
+                      showFav(item['Name']);
+                    }, getVariation(item['variation'], index, pr)),
                   ],
                 );
               }),
@@ -349,51 +375,26 @@ class MarketWidgetState extends State<MarketWidget> {
       });
     });
   }
-}
 
-Widget getLastPrice(variation, lastPrice) {
-  if (variation > 0) {
-    return Container(
-      width: 60,
-      margin: EdgeInsets.only(top: 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(lastPrice.toStringAsFixed(2),
-              style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  } else if (variation < 0) {
-    return Container(
-      width: 60,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(lastPrice.toStringAsFixed(2),
-              style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  } else {
-    return Container(
-      width: 60,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(lastPrice.toStringAsFixed(2),
-              style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold)),
-        ],
-      ),
+  void showFav(name) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Stock(name: name)),
     );
   }
+}
+
+Widget getLastPrice(lastPrice) {
+  return Container(
+    width: 70,
+    margin: EdgeInsets.only(top: 5),
+    child: Align(
+      alignment: Alignment.centerRight,
+      child: Text(
+        ntsDoubleToStr(lastPrice),
+        style: TextStyle(
+            color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
 }

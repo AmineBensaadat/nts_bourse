@@ -1,383 +1,337 @@
 import 'package:flutter/material.dart';
-import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:nts_bourse_app/screens/subscription.dart';
+import 'package:nts_bourse_app/screens/subscriptionRachats.dart';
+
+import '../custom_icons.dart';
+import '../services/ntsoft.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 
 class OpcvmWidget extends StatefulWidget {
-  const OpcvmWidget({super.key});
+  const OpcvmWidget({
+    super.key,
+  });
 
   @override
-  State<OpcvmWidget> createState() => OpcvmWidgetState();
+  State<OpcvmWidget> createState() => _OpcvmWidgetState();
 }
 
-class OpcvmWidgetState extends State<OpcvmWidget> {
-  bool isAscending = false;
-  int? sortColumnIndex;
+class DataList {
+  String name;
+  String type;
+  double vl;
+  double variation;
+  DataList(
+      {required this.name,
+      required this.type,
+      required this.vl,
+      required this.variation});
+}
 
-  List<dynamic> Opcvm_data = [
-    {
-      "Name": "AFMA",
-      "vol": "vol 108 908.78",
-      "variation": 37,
-      "lastPrice": 1080.00,
-      "is_Fav": false
-    },
-    {
-      "Name": "Aliance",
-      "vol": "vol 505.78",
-      "variation": -0.80,
-      "lastPrice": 3300.00,
-      "is_Fav": false
-    },
-    {
-      "Name": "Atlanta",
-      "vol": "vol 903 68.78",
-      "variation": 0.10,
-      "lastPrice": 166.00,
-      "is_Fav": false
-    },
-    {
-      "Name": "Auto Hall",
-      "vol": "vol 108 908.78",
-      "variation": 0.00,
-      "lastPrice": 0.00,
-      "is_Fav": false
-    },
-    {
-      "Name": "Auto Hall",
-      "vol": "vol 108 908.78",
-      "variation": 0.00,
-      "lastPrice": 0.00,
-      "is_Fav": false
-    },
-    {
-      "Name": "Aliance",
-      "vol": "vol 505.78",
-      "variation": -0.80,
-      "lastPrice": 3300.00,
-      "is_Fav": false
-    },
-    {
-      "Name": "Auto Hall",
-      "vol": "vol 108 908.78",
-      "variation": 0.00,
-      "lastPrice": 0.00,
-      "is_Fav": false
-    },
-    {
-      "Name": "AFMA",
-      "vol": "vol 108 908.78",
-      "variation": 37,
-      "lastPrice": 1080.00,
-      "is_Fav": false
-    },
-    {
-      "Name": "Aliance",
-      "vol": "vol 505.78",
-      "variation": -0.80,
-      "lastPrice": 3300.00,
-      "is_Fav": false
-    },
-    {
-      "Name": "AFMA",
-      "vol": "vol 108 908.78",
-      "variation": 37,
-      "lastPrice": 1080.00,
-      "is_Fav": false
-    },
-    {
-      "Name": "Aliance",
-      "vol": "vol 505.78",
-      "variation": -0.80,
-      "lastPrice": 3300.00,
-      "is_Fav": false
-    },
-    {
-      "Name": "AFMA",
-      "vol": "vol 108 908.78",
-      "variation": 37,
-      "lastPrice": 1080.00,
-      "is_Fav": false
-    },
-    {
-      "Name": "Aliance",
-      "vol": "vol 505.78",
-      "variation": -0.80,
-      "lastPrice": 3300.00,
-      "is_Fav": false
-    },
-  ];
-  List<dynamic> filteredData = [];
-
-  final searchController = TextEditingController();
-
-  @override
-  void initState() {
-    filteredData = Opcvm_data;
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
-
-  void _onSearchTextChanged(String text) {
-    setState(() {
-      filteredData = text.isEmpty
-          ? Opcvm_data
-          : Opcvm_data.where((item) =>
-              item['Name'].toLowerCase().contains(text.toLowerCase()) ||
-              item['lastPrice'].toString().contains(text) ||
-              item['variation'].toString().contains(text)).toList();
-    });
-  }
-
-  Widget getVariation(variation, index, pr) {
-    if (variation > 0) {
-      return Row(
-        children: [
-          Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.green[400],
-              ),
-              margin: EdgeInsets.fromLTRB(0, 9, 0, 9),
-              height: double.infinity,
-              width: 60, //
-              child: Center(
-                  child: Text(variation.toStringAsFixed(2) + ' %',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold)))),
-          IconButton(
-            icon: const Icon(Icons.star),
-            color: (Opcvm_data[index]['is_Fav'] ? Colors.amber : Colors.black),
-            onPressed: () {
-              // show dialog
-              pr.show();
-              setFav(Opcvm_data[index], pr);
-            },
-          ),
-        ],
-      );
-    } else if (variation < 0) {
-      return Row(
-        children: [
-          Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.red,
-              ),
-              margin: EdgeInsets.fromLTRB(0, 9, 0, 9),
-              height: double.infinity,
-              width: 60, //
-              child: Center(
-                  child: Text(variation.toStringAsFixed(2) + ' %',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold)))),
-          IconButton(
-            icon: const Icon(Icons.star),
-            color: (Opcvm_data[index]['is_Fav'] ? Colors.amber : Colors.black),
-            onPressed: () {
-              setState(() {
-                // show dialog
-                pr.show();
-                setFav(Opcvm_data[index], pr);
-              });
-            },
-          ),
-        ],
-      );
-    } else {
-      return Row(
-        children: [
-          Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.grey,
-              ),
-              margin: EdgeInsets.fromLTRB(0, 9, 0, 9),
-              height: double.infinity,
-              width: 60, //
-              child: Center(
-                  child: Text(variation.toStringAsFixed(2) + ' %',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold)))),
-          IconButton(
-            icon: const Icon(Icons.star),
-            color: (Opcvm_data[index]['is_Fav'] ? Colors.amber : Colors.black),
-            onPressed: () {
-              setState(() {
-                // show dialog
-                pr.show();
-                setFav(Opcvm_data[index], pr);
-              });
-            },
-          ),
-        ],
-      );
-    }
-  }
-
+class _OpcvmWidgetState extends State<OpcvmWidget> {
+  List<DataList> items = [];
   @override
   Widget build(BuildContext context) {
-    final columns = ['Nom / Vol', 'Dernier prix', 'Variation'];
-
-    //Create an instance of ProgressDialog
-    final ProgressDialog pr = ProgressDialog(
-      context,
-      type: ProgressDialogType.normal,
-      isDismissible: true,
-      showLogs: true,
-    );
-    pr.style(
-        message: 'Chargement ...',
-        borderRadius: 10.0,
-        backgroundColor: Colors.white,
-        progressWidget: CircularProgressIndicator(),
-        elevation: 10.0,
-        insetAnimCurve: Curves.easeInOut,
-        progress: 0.0,
-        maxProgress: 50.0,
-        progressTextStyle: TextStyle(
-            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-        messageTextStyle: TextStyle(
-            color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
-    return Column(children: [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.grey,
-              width: 1,
-            ),
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(50),
-          ),
-          height: 40,
-          child: TextField(
-            controller: searchController,
-            decoration: const InputDecoration(
-              hintText: 'Recherche',
-              contentPadding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 10.0),
-              //border: OutlineInputBorder(),
-              border: InputBorder.none,
-            ),
-            onChanged: _onSearchTextChanged,
-          ),
-        ),
-      ),
-      Expanded(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              columnSpacing: 20,
-              sortAscending: isAscending,
-              sortColumnIndex: sortColumnIndex,
-              columns: getColumns(columns),
-              rows: List.generate(filteredData.length, (index) {
-                final item = filteredData[index];
-                return DataRow(
-                  cells: [
-                    DataCell(Container(
-                        margin: EdgeInsets.only(top: 5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item['Name'],
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Container(
-                                margin: EdgeInsets.only(top: 5),
-                                child: Text(item['vol'])),
-                          ],
-                        ))),
-                    DataCell(
-                        getLastPrice(item['variation'], item['lastPrice'])),
-                    DataCell(getVariation(item['variation'], index, pr)),
-                  ],
-                );
-              }),
-            ),
-          ),
-        ),
-      ),
-    ]);
-  }
-
-  void onSort(int columnIndex, bool ascending) {
-    if (columnIndex == 0) {
-      print(filteredData[0]);
-      filteredData.sort((a, b) {
-        return compareString(ascending, a['Name'], b['Name']);
-      });
-    } else if (columnIndex == 1) {
-      filteredData.sort((a, b) => compareString(
-          ascending, a['lastPrice'].toString(), b['lastPrice'].toString()));
-    } else if (columnIndex == 2) {
-      filteredData.sort((a, b) => compareString(
-          ascending, a['variation'].toString(), b['variation'].toString()));
-    }
-
     setState(() {
-      this.sortColumnIndex = columnIndex;
-      this.isAscending = ascending;
+      items = List.of([
+        DataList(
+          name: 'CAP IMT ',
+          type: 'OPCVM Monétaire',
+          variation: 0,
+          vl: 450,
+        ),
+        DataList(
+          name: 'CAP IMT ',
+          type: 'OPCVM Monétaire',
+          variation: 14,
+          vl: 450,
+        ),
+        DataList(
+          name: 'CAP IMT ',
+          type: 'OPCVM Monétaire',
+          variation: -3,
+          vl: 450,
+        ),
+        DataList(
+          name: 'CAP IMT ',
+          type: 'OPCVM Monétaire',
+          variation: 0,
+          vl: 450,
+        ),
+        DataList(
+          name: 'CAP IMT ',
+          type: 'OPCVM Monétaire',
+          variation: 0,
+          vl: 450,
+        ),
+        DataList(
+          name: 'CAP IMT ',
+          type: 'OPCVM Monétaire',
+          variation: 0,
+          vl: 450,
+        ),
+        DataList(
+          name: 'CAP IMT ',
+          type: 'OPCVM Monétaire',
+          variation: 10,
+          vl: 450,
+        ),
+      ]);
     });
-  }
-
-  List<DataColumn> getColumns(List<String> columns) => columns
-      .map((String column) => DataColumn(
-            label: Text(column),
-            onSort: onSort,
-          ))
-      .toList();
-
-  int compareString(bool ascending, String value1, String value2) =>
-      ascending ? value1.compareTo(value2) : value2.compareTo(value1);
-
-  setFav(data, pr) async {
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        data['is_Fav'] = !data['is_Fav'];
-        pr.hide();
-      });
-    });
-  }
-}
-
-Widget getLastPrice(variation, lastPrice) {
-  if (variation > 0) {
     return Container(
-      width: 60,
-      margin: EdgeInsets.only(top: 5),
+      //color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(lastPrice.toStringAsFixed(2),
-              style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold)),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                    child: Text(
+                      'Nom / Type',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 3,
+                  child: Container(
+                    child: Text(
+                      'VL',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Variation',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: items.length,
+              itemBuilder: (BuildContext context, int index) {
+                final item = items[index];
+                return getSlidableListOPCVM(item);
+              },
+              separatorBuilder: (BuildContext context, int index) =>
+                  const Divider(),
+            ),
+          ),
         ],
       ),
     );
+  }
+}
+
+void goToScreen(BuildContext context, screenName) {
+  if (screenName == 'Subscription') {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Subscription()),
+    );
+  }
+
+  if (screenName == 'Rachats') {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SubscriptionRachats()),
+    );
+  }
+}
+
+getSlidableListOPCVM(DataList item) {
+  return Slidable(
+      // Specify a key if the Slidable is dismissible.
+      key: const ValueKey(0),
+
+      // The start action pane is the one at the left or the top side.
+      startActionPane: ActionPane(
+        // A motion is a widget used to control how the pane animates.
+        motion: const ScrollMotion(),
+
+        // A pane can dismiss the Slidable.
+        //dismissible: DismissiblePane(onDismissed: () {}),
+
+        // All actions are defined in the children parameter.
+        children: [
+          // A SlidableAction can have an icon and/or a label.
+          SlidableAction(
+            // An action can be bigger than the others.
+            flex: 1,
+            onPressed: (context) {
+              goToScreen(context, 'Subscription');
+            },
+            backgroundColor: Color(0xFF140C24),
+            foregroundColor: Colors.white,
+            icon: CustomIcons.sous24,
+          ),
+          SlidableAction(
+            onPressed: (context) {
+              goToScreen(context, 'Rachats');
+            },
+            backgroundColor: Colors.amber,
+            foregroundColor: Color(0xFF140C24),
+            icon: CustomIcons.rachat24,
+          ),
+        ],
+      ),
+
+      // The end action pane is the one at the right or the bottom side.
+      endActionPane: ActionPane(
+        motion: ScrollMotion(),
+        children: [
+          SlidableAction(
+            // An action can be bigger than the others.
+            flex: 1,
+            onPressed: (context) {
+              goToScreen(context, 'Subscription');
+            },
+            backgroundColor: Color(0xFF140C24),
+            foregroundColor: Colors.white,
+            icon: CustomIcons.sous24,
+          ),
+          SlidableAction(
+            onPressed: (context) {
+              goToScreen(context, 'Rachats');
+            },
+            backgroundColor: Colors.amber,
+            foregroundColor: Color(0xFF140C24),
+            icon: CustomIcons.rachat24,
+          ),
+        ],
+      ),
+
+      // The child of the Slidable is what the user sees when the
+      // component is not dragged.
+      child: Card(
+        margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
+        color: Colors.white,
+        borderOnForeground: true,
+        elevation: 3,
+        child: Container(
+          height: 70,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                flex: 1,
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        //width: 150,
+                        margin: EdgeInsets.fromLTRB(5, 18, 0, 0),
+                        child: Text(
+                          item.name,
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                        child: Text(
+                          item.type,
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Container(
+                  //width: 120,
+                  child: Text(
+                    ntsDoubleToStr(item.vl),
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              Flexible(flex: 1, child: getVariation(item.variation))
+            ],
+          ),
+        ),
+      ));
+}
+
+void doNothing(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => SubscriptionRachats()),
+  );
+}
+
+Widget getVariation(variation) {
+  if (variation > 0) {
+    return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.green[400],
+        ),
+        margin: EdgeInsets.fromLTRB(10, 15, 10, 15),
+        height: double.infinity,
+        width: 70, //
+        child: Center(
+            child: Text(variation.toStringAsFixed(2) + ' %',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12))));
   } else if (variation < 0) {
     return Container(
-      width: 60,
-      child: Text(lastPrice.toStringAsFixed(2),
-          style: TextStyle(
-              color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold)),
-    );
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.red[400],
+        ),
+        margin: EdgeInsets.fromLTRB(10, 15, 10, 15),
+        height: double.infinity,
+        width: 70, //
+        child: Center(
+            child: Text(variation.toStringAsFixed(2) + ' %',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12))));
   } else {
     return Container(
-      width: 60,
-      child: Text(lastPrice.toStringAsFixed(2),
-          style: TextStyle(
-              color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold)),
-    );
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey,
+        ),
+        margin: EdgeInsets.fromLTRB(10, 15, 10, 15),
+        height: double.infinity,
+        width: 70, //
+        child: Center(
+            child: Text(variation.toStringAsFixed(2) + ' %',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12))));
   }
 }

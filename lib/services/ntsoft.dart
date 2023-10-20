@@ -1,6 +1,10 @@
 // ignore_for_file: avoid_print, prefer_interpolation_to_compose_strings
 
+import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:archive/archive_io.dart';
@@ -326,27 +330,14 @@ Future<void> initMySessionToIniFile(String fname) async {
   saveMySessionToIniFile(mySession, fname);
 }
 
-Future<void> awesomeDialogError(BuildContext context, String errorMsg) async {
-  await AwesomeDialog(
-    context: context,
-    dialogType: DialogType.error,
-    animType: AnimType.rightSlide,
-    headerAnimationLoop: false,
-    title: 'avocat',
-    desc: errorMsg,
-    btnOkOnPress: () {},
-    btnOkIcon: Icons.cancel,
-    btnOkColor: Colors.red,
-  ).show();
-}
-
-Future<void> awesomeDialogMsg(BuildContext context, String aMsg) async {
+Future<void> awesomeDialogMsg(
+    BuildContext context, String aMsg, String title) async {
   await AwesomeDialog(
     context: context,
     dialogType: DialogType.info,
     animType: AnimType.rightSlide,
     headerAnimationLoop: false,
-    title: 'avocat',
+    title: title,
     desc: aMsg,
     btnOkOnPress: () {},
     btnOkIcon: Icons.info_rounded,
@@ -357,3 +348,155 @@ Future<void> awesomeDialogMsg(BuildContext context, String aMsg) async {
 String ntsDoubleToStr(double n) {
   return NumberFormat('#,##0.00').format(n).replaceAll(',', ' ');
 }
+
+Future<void> awesomeDialogError(
+    BuildContext context, String errorMsg, String title) async {
+  await AwesomeDialog(
+    context: context,
+    dialogType: DialogType.error,
+    animType: AnimType.rightSlide,
+    headerAnimationLoop: false,
+    title: title,
+    desc: errorMsg,
+    btnOkOnPress: () {},
+    btnOkIcon: Icons.cancel,
+    btnOkColor: Colors.red,
+  ).show();
+}
+
+//----------- Start  Function of Download files --------------------
+Future<File> createFileOfPdfUrl(url, pr) async {
+  Completer<File> completer = Completer();
+  pr.show();
+  print("Start download file from internet!");
+  try {
+    final filename = url.substring(url.lastIndexOf("/") + 1);
+    var request = await HttpClient().getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    var dir = await getApplicationDocumentsDirectory();
+    print("Download files");
+    File file = File("${dir.path}/$filename");
+
+    await file.writeAsBytes(bytes, flush: true);
+    completer.complete(file);
+  } catch (e) {
+    throw Exception('Error parsing asset file!');
+  }
+
+  pr.hide();
+  return completer.future;
+}
+//-------- End Function of Download files-----------------------
+
+//--------------------- Start class of read file ------------------------------
+class PDFScreen extends StatefulWidget {
+  final String? path;
+
+  PDFScreen({Key? key, this.path}) : super(key: key);
+
+  _PDFScreenState createState() => _PDFScreenState();
+}
+
+class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
+  final Completer<PDFViewController> _controller =
+      Completer<PDFViewController>();
+  int? pages = 0;
+  int? currentPage = 0;
+  bool isReady = false;
+  String errorMessage = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Document"),
+      ),
+      backgroundColor: Colors.grey,
+      body: Stack(
+        children: <Widget>[
+          PDFView(
+            filePath: widget.path,
+            enableSwipe: true,
+            swipeHorizontal: false,
+            autoSpacing: true,
+            pageFling: true,
+            pageSnap: true,
+            defaultPage: currentPage!,
+            fitPolicy: FitPolicy.BOTH,
+            preventLinkNavigation:
+                false, // if set to true the link is handled in flutter
+            onRender: (_pages) {
+              setState(() {
+                pages = _pages;
+                isReady = true;
+              });
+            },
+            onError: (error) {
+              setState(() {
+                errorMessage = error.toString();
+              });
+              print(error.toString());
+            },
+            onPageError: (page, error) {
+              setState(() {
+                errorMessage = '$page: ${error.toString()}';
+              });
+              print('$page: ${error.toString()}');
+            },
+            onViewCreated: (PDFViewController pdfViewController) {
+              _controller.complete(pdfViewController);
+            },
+            onLinkHandler: (String? uri) {
+              print('goto uri: $uri');
+            },
+            onPageChanged: (int? page, int? total) {
+              print('page change: $page/$total');
+              setState(() {
+                currentPage = page;
+              });
+            },
+          ),
+          errorMessage.isEmpty
+              ? !isReady
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Container()
+              : Center(
+                  child: Text(errorMessage),
+                )
+        ],
+      ),
+      floatingActionButton: FutureBuilder<PDFViewController>(
+        future: _controller.future,
+        builder: (context, AsyncSnapshot<PDFViewController> snapshot) {
+          return Container();
+        },
+      ),
+    );
+  }
+}
+// -------------------- End class of rad file -------------------------------
+
+//--------------------- Start class of read html Code  ------------------------------
+class HtmlScreen extends StatefulWidget {
+  final String? html;
+
+  HtmlScreen({Key? key, this.html}) : super(key: key);
+
+  _HtmlScreenState createState() => _HtmlScreenState();
+}
+
+class _HtmlScreenState extends State<HtmlScreen> with WidgetsBindingObserver {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("HTML"),
+      ),
+      body: HtmlWidget('${widget.html}'),
+    );
+  }
+}
+// -------------------- End class of raad html Code -------------------------------

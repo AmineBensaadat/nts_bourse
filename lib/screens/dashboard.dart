@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:nts_bourse_app/screens/market.dart';
 import 'package:nts_bourse_app/screens/portefeuille.dart';
 import 'package:nts_bourse_app/shared/appbar.dart';
+import '../shared/NavDrawer.dart';
+import 'Alertes.dart';
 import 'News.dart';
 import 'orders.dart';
 
 class Dashboard extends StatefulWidget {
-  Dashboard({Key? key}) : super(key: key);
+  //Dashboard({Key? key}) : super(key: key);
+  final int index;
+  const Dashboard({required this.index});
   @override
   State<Dashboard> createState() => _DashboardState();
 }
@@ -22,7 +26,7 @@ class _DashboardState extends State<Dashboard> {
     Market(),
     Portefeuille(),
     Orders(),
-    Center(child: Text('4')),
+    Alertes(),
     News(),
   ];
 
@@ -33,7 +37,7 @@ class _DashboardState extends State<Dashboard> {
         Market(),
         Portefeuille(),
         Orders(),
-        Center(child: Text('4')),
+        Alertes(),
         News(),
       ];
     });
@@ -42,7 +46,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    _selectedIndex = _selectedIndex;
+    _selectedIndex = widget.index;
   }
 
   Color _getBgColor(int index) =>
@@ -78,6 +82,7 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 250, 252, 255),
       appBar: AppbarWidget(),
+      endDrawer: NavDrawer(),
       body: Container(
         child: tabs[_selectedIndex],
       ),

@@ -2,7 +2,9 @@ import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../services/ntsoft.dart';
 import '../shared/OPCVMOrdersWidget.dart';
+import '../shared/VirementWidget.dart';
 
 class Orders extends StatefulWidget {
   const Orders({
@@ -237,10 +239,7 @@ class _OrdersState extends State<Orders> {
                     ),
                   ),
                   OPCVMOrdersWidget(),
-                  Container(
-                    color: Colors.white,
-                    child: Text('data 2'),
-                  ),
+                  VirementWidget(),
                 ],
               ),
             ),
@@ -372,7 +371,7 @@ getSlidableList(DataList item) {
                       Container(
                         margin: EdgeInsets.only(top: 8),
                         child: Text(
-                          item.cours.toStringAsFixed(2),
+                          ntsDoubleToStr(item.cours),
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold),
                         ),

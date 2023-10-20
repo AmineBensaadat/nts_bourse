@@ -42,7 +42,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 SizedBox(
                   height: 40,
                 ),
-                LoginForm(),
+                ForgetPasswordForm(),
               ],
             ),
           )),
@@ -51,77 +51,34 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 }
 
 // Create a Form widget.
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class ForgetPasswordForm extends StatefulWidget {
+  const ForgetPasswordForm({super.key});
 
   @override
-  LoginFormState createState() {
-    return LoginFormState();
+  ForgetPasswordFormState createState() {
+    return ForgetPasswordFormState();
   }
 }
 
 // Create a corresponding State class.
 // This class holds data related to the form.
-class LoginFormState extends State<LoginForm> {
+class ForgetPasswordFormState extends State<ForgetPasswordForm> {
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<LoginFormState>.
-  final _formKey = GlobalKey<FormState>();
+  final _forgetPasswordFormKey = GlobalKey<FormState>();
 
-  String myloginvalue = '';
-  String mypasseword = '';
+  String myEmailvalue = '';
   bool isSwitchOn = false;
 
-  @override
-  void initState() {
-    super.initState();
-    //loadMySessionFromIniFile('session.ini');
-    myloginvalue = '';
-    mypasseword = '';
-  }
-
   Widget build(BuildContext context) {
-    //final loginController = TextEditingController();
-    //final passwordController = TextEditingController();
-    // Build a Form widget using the _formKey created above.
-    //MySession mySession = MySession();
     return Form(
-      key: _formKey,
+      key: _forgetPasswordFormKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          FractionallySizedBox(
-            widthFactor: 0.8,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                  color: Colors.black,
-                  icon: const Icon(
-                    Icons.keyboard_backspace_rounded,
-                    size: 32,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                Text(
-                  "Mot de passe oublié",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
           FractionallySizedBox(
             widthFactor: 0.8,
             child: Row(
@@ -141,7 +98,7 @@ class LoginFormState extends State<LoginForm> {
           SizedBox(
             height: 10,
           ),
-          //Login
+          //Password
           FractionallySizedBox(
             widthFactor: 0.8,
             child: Container(
@@ -156,7 +113,7 @@ class LoginFormState extends State<LoginForm> {
               child: TextFormField(
                 style: TextStyle(color: Colors.black),
                 //controller: loginController,
-                initialValue: myloginvalue,
+                initialValue: myEmailvalue,
                 decoration: InputDecoration(
                   errorStyle: const TextStyle(height: 0),
                   errorMaxLines: 1,
@@ -178,14 +135,14 @@ class LoginFormState extends State<LoginForm> {
                 // The validator receives the text that the user has entered.
                 validator: (value) {
                   if (value == null || value.isEmpty || (value.length == 0)) {
-                    String errorMsg = 'l\'identifiant ne peut pas être vide';
-                    awesomeDialogError(context, errorMsg);
+                    String errorMsg = 'l\'Email ne peut pas être vide';
+                    awesomeDialogError(context, errorMsg, 'error');
                     return '';
                   }
                   return null;
                 },
                 onSaved: (value) {
-                  myloginvalue = (value == null) ? '' : value;
+                  myEmailvalue = (value == null) ? '' : value;
                 },
               ),
             ),
@@ -193,12 +150,16 @@ class LoginFormState extends State<LoginForm> {
           SizedBox(
             height: 15,
           ),
-          //Password
 
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  _forgetPasswordFormKey.currentState!.save();
+                  if (_forgetPasswordFormKey.currentState!.validate()) {
+                    _forgetPasswordFormKey.currentState!.save();
+                  }
+                },
                 child: Text(
                   "Envoyer",
                   style: TextStyle(fontSize: 20),

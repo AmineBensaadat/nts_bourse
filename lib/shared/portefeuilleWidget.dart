@@ -212,14 +212,18 @@ class _PortefeuilleWidgetState extends State<PortefeuilleWidget> {
                     final item = titresdData[index];
                     return DataRow(
                       cells: [
-                        DataCell(Text('${item['qte'] ?? ''}')),
-                        DataCell(Text('${item['valeur'] ?? ''}')),
-                        DataCell(
-                            Text('${item['cours'].toStringAsFixed(2) ?? ''}')),
-                        DataCell(
-                            Text('${item['valo'].toStringAsFixed(2) ?? ''}')),
-                        DataCell(
-                            Text('${item['PRMP'].toStringAsFixed(2) ?? ''}')),
+                        DataCell(Text('${item['qte'] ?? ''}',
+                            style: TextStyle(fontSize: 12))),
+                        DataCell(Text('${item['valeur'] ?? ''}',
+                            style: TextStyle(fontSize: 12))),
+                        DataCell(Text(
+                          ntsDoubleToStr(item['cours']),
+                          style: TextStyle(fontSize: 12),
+                        )),
+                        DataCell(Text(ntsDoubleToStr(item['valo']),
+                            style: TextStyle(fontSize: 12))),
+                        DataCell(Text(ntsDoubleToStr(item['PRMP']),
+                            style: TextStyle(fontSize: 12))),
                       ],
                     );
                   }),

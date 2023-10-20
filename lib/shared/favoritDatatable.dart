@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nts_bourse_app/screens/stockScreen.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 import '../model/fav.dart';
@@ -147,11 +148,11 @@ class _FavoritWidgetDatatableState extends State<FavoritWidgetDatatable> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
-            columnSpacing: 35,
+            columnSpacing: 30,
             sortAscending: isAscending,
             sortColumnIndex: sortColumnIndex,
             columns: getColumns(columns),
-            rows: grtRows(Favs, pr)),
+            rows: getRows(Favs, pr)),
       ),
     );
   }
@@ -262,9 +263,10 @@ class _FavoritWidgetDatatableState extends State<FavoritWidgetDatatable> {
           ))
       .toList();
 
-  List<DataRow> grtRows(List<Fav> Favs, pr) => Favs.map((Fav Fav) {
+  List<DataRow> getRows(List<Fav> Favs, pr) => Favs.map((Fav Fav) {
         return DataRow(cells: <DataCell>[
-          DataCell(Container(
+          DataCell(
+            Container(
               margin: EdgeInsets.only(top: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,10 +278,23 @@ class _FavoritWidgetDatatableState extends State<FavoritWidgetDatatable> {
                   Container(
                       margin: EdgeInsets.only(top: 5), child: Text(Fav.vol)),
                 ],
-              ))),
-          DataCell(getLastPrice(Fav.variation, Fav.lastPrice)),
+              ),
+            ),
+            onTap: () {
+              showFav(Fav.favName);
+            },
+          ),
+          DataCell(
+            getLastPrice(Fav.lastPrice),
+            onTap: () {
+              showFav(Fav.favName);
+            },
+          ),
           DataCell(
             getVariation(Fav.variation, Fav, pr),
+            onTap: () {
+              showFav(Fav.favName);
+            },
           ),
         ]);
       }).toList();
@@ -303,41 +318,26 @@ class _FavoritWidgetDatatableState extends State<FavoritWidgetDatatable> {
 
   int compareString(bool ascending, String value1, String value2) =>
       ascending ? value1.compareTo(value2) : value2.compareTo(value1);
-}
 
-Widget getLastPrice(variation, lastPrice) {
-  if (variation > 0) {
-    return Container(
-      width: 70,
-      margin: EdgeInsets.only(top: 5),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Text(
-          lastPrice.toStringAsFixed(2),
-          style: TextStyle(
-              color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  } else if (variation < 0) {
-    return Container(
-      width: 70,
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Text(lastPrice.toStringAsFixed(2),
-            style: TextStyle(
-                color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold)),
-      ),
-    );
-  } else {
-    return Container(
-      width: 70,
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Text(ntsDoubleToStr(lastPrice),
-            style: TextStyle(
-                color: Colors.grey, fontSize: 16, fontWeight: FontWeight.bold)),
-      ),
+  void showFav(name) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Stock(name: name)),
     );
   }
+}
+
+Widget getLastPrice(lastPrice) {
+  return Container(
+    width: 70,
+    margin: EdgeInsets.only(top: 5),
+    child: Align(
+      alignment: Alignment.centerRight,
+      child: Text(
+        ntsDoubleToStr(lastPrice),
+        style: TextStyle(
+            color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
 }

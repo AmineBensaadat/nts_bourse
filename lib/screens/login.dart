@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:nts_bourse_app/screens/dashboard.dart';
-import 'package:nts_bourse_app/screens/forgetPassword.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 import '../services/ntsoft.dart';
 import 'package:xml/xml.dart';
 
+import 'forgetPassword.dart';
+
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  const Login({super.key});
+
   @override
-  State<Login> createState() => _LoginState();
+  LoginState createState() => LoginState();
 }
 
-class _LoginState extends State<Login> {
+class LoginState extends State<Login> {
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -111,7 +115,7 @@ class LoginFormState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
-    //loadMySessionFromIniFile('session.ini');
+    loadMySessionFromIniFile('session.ini');
     myloginvalue = '';
     mypasseword = '';
   }
@@ -156,7 +160,7 @@ class LoginFormState extends State<LoginForm> {
                       color: Colors.grey[900],
                     ),
                   ),
-                  hintText: "Identifiant :",
+                  hintText: "Identifiant",
                   border: InputBorder.none,
                 ),
 
@@ -164,7 +168,7 @@ class LoginFormState extends State<LoginForm> {
                 validator: (value) {
                   if (value == null || value.isEmpty || (value.length == 0)) {
                     String errorMsg = 'l\'identifiant ne peut pas être vide';
-                    awesomeDialogError(context, errorMsg);
+                    awesomeDialogError(context, errorMsg, 'erreur');
                     return '';
                   }
                   return null;
@@ -207,14 +211,14 @@ class LoginFormState extends State<LoginForm> {
                         color: Colors.grey[900],
                       ),
                     ),
-                    hintText: "Password :",
+                    hintText: "Mot de passe",
                     border: InputBorder.none),
                 // The validator receives the text that the user has entered.
                 validator: (value) {
                   if ((myloginvalue.isNotEmpty) && (myloginvalue.length > 0)) {
                     if (value == null || value.isEmpty || (value.length == 0)) {
                       String errorMsg = 'Le mot de passe ne peut pas être vide';
-                      awesomeDialogError(context, errorMsg);
+                      awesomeDialogError(context, errorMsg, 'erreur');
                       return null;
                     }
                     ;
@@ -266,10 +270,16 @@ class LoginFormState extends State<LoginForm> {
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Dashboard()),
-                  );
+                  // setState(() {
+                  //   // show dialog
+                  //   pr.show();
+                  //   setFav(pr);
+                  // });
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) => Dashboard(index: 0)),
+                  // );
 
                   myloginvalue = '';
                   mypasseword = '';
@@ -308,14 +318,49 @@ class LoginFormState extends State<LoginForm> {
 }
 
 execLogin(BuildContext context, String myLogin, String myPassword) async {
-  MySession mySession = MySession();
-  mySession.idUser = 0;
+  final ProgressDialog pr = ProgressDialog(
+    context,
+    type: ProgressDialogType.normal,
+    isDismissible: true,
+    showLogs: true,
+  );
+  pr.style(
+      message: 'Chargement ...',
+      borderRadius: 10.0,
+      backgroundColor: Colors.white,
+      progressWidget: CircularProgressIndicator(),
+      elevation: 10.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 50.0,
+      progressTextStyle: TextStyle(
+          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600));
 
-  XmlDocument xdoc = addAction('', '1', 'TEMP1', 'PROCEDURE', 'MAA', 'O');
-  xdoc = addParam(xdoc, '1', '0', 'Login_', myLogin, 'O');
-  xdoc = addParam(xdoc, '1', '0', 'PWD_', myPassword, 'O');
+  try {
+    pr.show();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Dashboard(index: 0)),
+    );
+  } catch (error) {
+    print(error);
+  }
+  Future.delayed(Duration(seconds: 3)).then((value) {
+    pr.hide().whenComplete(() {
+      print(pr.isShowing());
+    });
+  });
 
-  String x = xmlToString(xdoc);
+  // MySession mySession = MySession();
+  // mySession.idUser = 0;
+
+  // XmlDocument xdoc = addAction('', '1', 'TEMP1', 'PROCEDURE', 'MAA', 'O');
+  // xdoc = addParam(xdoc, '1', '0', 'Login_', myLogin, 'O');
+  // xdoc = addParam(xdoc, '1', '0', 'PWD_', myPassword, 'O');
+
+  // String x = xmlToString(xdoc);
 
   // try {
   //   //  Test de sauvegarde de session.INI
@@ -331,20 +376,21 @@ execLogin(BuildContext context, String myLogin, String myPassword) async {
   // }
 
   // Execution de l'action de LOGIN sur Diam
-  String url = 'http://${mySession.host}:${mySession.port.toString()}/AOOA';
-  await sendPostRequest(url, mySession.token, 'AOOA', x, retourOkLogin,
-      retourKoLogin, [context, url]);
+  // String url = 'http://${mySession.host}:${mySession.port.toString()}/AOOA';
+  // await sendPostRequest(url, mySession.token, 'AOOA', x, retourOkLogin,
+  //     retourKoLogin, [context, url]);
 }
 
 Future<void> retourKoLogin(String error, List arguments) async {
-  await awesomeDialogError(arguments[0], error);
+  await awesomeDialogError(arguments[0], error, 'erreur');
   //************************************* */
   MySession mySession = MySession();
   mySession.tmpData = 'DashboardTwoColumnCards';
-  // Navigator.pushReplacement(
-  //   arguments[0],
-  //   MaterialPageRoute(builder: (context) => Dashboard()),
-  // );
+
+  Navigator.pushReplacement(
+    arguments[0],
+    MaterialPageRoute(builder: (context) => Dashboard(index: 0)),
+  );
 
   return;
 }
@@ -361,7 +407,7 @@ Future<void> retourOkLogin(String data, List arguments) async {
 
   await saveMySessionToIniFile(mySession, 'session.ini');
   if (mySession.tmpData.length > 2) {
-    awesomeDialogError(arguments[0], mySession.tmpData);
+    awesomeDialogError(arguments[0], mySession.tmpData, 'erreur');
   } else {
     mySession.tmpData = 'DashboardTwoColumnCards';
     // Navigator.pushReplacement(
